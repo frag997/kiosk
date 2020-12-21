@@ -10,9 +10,9 @@ import itertools
 import numpy as np
 from dotenv import load_dotenv
 
-from transformers.tokenization_gpt2 import GPT2Tokenizer
-import discord
-import openai
+#from transformers.tokenization_gpt2 import GPT2Tokenizer
+#import discord
+#import openai
 
 
 
@@ -42,6 +42,8 @@ def gpt3_complete(prompt,
     # fix this
     max_completions=1
     
+
+    return   
     
     while not finished:
         response = openai.Completion.create(
