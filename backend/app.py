@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 from threading import Lock
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, jsonify
 from flask_socketio import SocketIO, emit
+import time
 
 import gpt3
 
@@ -11,7 +12,6 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
-
 
 
 def background_thread():
@@ -72,6 +72,10 @@ def test_disconnect():
 @app.route('/')
 def index():
     return render_template('index.html', async_mode=socketio.async_mode)
+
+@app.route('/time')
+def get_current_time():
+    return jsonify({'time': time.time()})
 
 
 if __name__ == '__main__':
