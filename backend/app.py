@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+from dotenv import load_dotenv
 from threading import Lock
 from flask import Flask, render_template, session, request, jsonify
 from flask_socketio import SocketIO, emit
 import time
 
-import gpt3
+#import gpt3
 
 async_mode = None  # "threading", "eventlet" or "gevent", None=autochoose
 app = Flask(__name__)
@@ -39,15 +40,15 @@ def receive_gpt3_request(message):
     print(temperature, max_tokens, top_p, frequency_penalty, presence_penalty)
     print('---------------------')
 
-    completion = gpt3.gpt3_complete(
-        prompt_str, 
-        stops=['\n'], 
-        max_tokens=max_tokens, 
-        temperature=temperature, 
-        engine='davinci',
-        max_completions=1)
+    # completion = gpt3.gpt3_complete(
+    #     prompt_str, 
+    #     stops=['\n'], 
+    #     max_tokens=max_tokens, 
+    #     temperature=temperature, 
+    #     engine='davinci',
+    #     max_completions=1)
     
-    
+    completion = 'this is a completion from the server'    
     print('the completion', completion)
 
 

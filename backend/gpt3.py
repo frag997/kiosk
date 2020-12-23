@@ -10,11 +10,8 @@ import itertools
 import numpy as np
 from dotenv import load_dotenv
 
-#from transformers.tokenization_gpt2 import GPT2Tokenizer
-#import discord
-#import openai
-
-
+from transformers.tokenization_gpt2 import GPT2Tokenizer
+import openai
 
 
 def count_tokens(text):
