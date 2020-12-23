@@ -19,25 +19,29 @@ function App() {
           });
   }, []);
 
-  const namespace = '/gpt3';
-  var socket = io(namespace);    // http[s]://<domain>:<port>[/<namespace>]
+  // const namespace = '/gpt3';
+  
+
+  const socket = io('http://localhost:5000', {
+    transports: ['websocket']
+  });
 
   socket.on('connect', function() {
-      //socket.emit('connected', {data: 'I\'m connected!'});
+      socket.emit('connected', {data: 'I\'m connected!'});
   });
 
   socket.on('completion', function(msg, cb) {
       console.log('got back response')
       console.log(msg.data)
-      document.getElementById('#log').append('<br>' + msg.data);
+      document.getElementById('log').append(msg.data);
+      
       if (cb) {
           cb();
       }
   });
 
   const formEmit = function(event) {
-    console.log("hey")
-    
+    event.preventDefault();
     const values = {
         prompt: prompt,
         max_tokens: max_tokens,
@@ -46,9 +50,7 @@ function App() {
         frequency_penalty: frequency_penalty,
         presence_penalty: presence_penalty,
       }
-      console.log('values', values)
-      // socket.emit('completion_request', values);
-      // return false;1
+      socket.emit('completion_request', values);
   };
 
 
