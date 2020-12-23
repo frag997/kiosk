@@ -1,2 +1,2 @@
 .env
-flask-server/static
+backend/__pycache__/
