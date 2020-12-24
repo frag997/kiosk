@@ -1,27 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import io from 'socket.io-client';
-import ResponsiveDrawer from './Components/sideMenu'
+import ResponsiveDrawer from './Components/sideBarComponent'
+import MainComponent from './Components/formComponent';
 import './App.css';
 
 function App() {
-  const [currentTime, setCurrentTime] = useState(0);
   const [prompt, setPrompt] = useState('');
   const [max_tokens, setMax_tokens] = useState(125);
   const [temperature, setTemperature] = useState(0.9);
   const [top_p, setTop_p] = useState(0.9);
   const [frequency_penalty, setFrequency_penalty] = useState(0.9);
   const [presence_penalty, setPresence_penalty] = useState(0.9);
+  const [stop_sequences, setStop_sequences] = useState([]);
 
-  useEffect(() => {
-      fetch('/time')
-          .then((res) => res.json())
-          .then((data) => {
-              setCurrentTime(data.time);
-          });
-  }, []);
-
-  // const namespace = '/gpt3';
-  
 
   const socket = io('http://10.10.10.114:5000/', {
     transports: ['websocket']
@@ -35,7 +26,10 @@ function App() {
       console.log('got back response')
       console.log(msg.data)
       document.getElementById('log').append(msg.data);
-      
+
+      const newPrompt = prompt + msg.data
+      setPrompt(newPrompt)
+
       if (cb) {
           cb();
       }
@@ -48,42 +42,28 @@ function App() {
     top_p: top_p,
     frequency_penalty: frequency_penalty,
     presence_penalty: presence_penalty,
+    stop_sequences: stop_sequences
   }
   const hooks = {
+    setPrompt,
     setMax_tokens,
     setTemperature,
     setTop_p,
     setFrequency_penalty,
-    setPresence_penalty
+    setPresence_penalty,
+    setStop_sequences
   }
 
   const formEmit = function(event) {
+    console.log('emit', event, values)
     event.preventDefault();
     socket.emit('completion_request', values);
   };
-
+  
   return (
     <div className='App'>
-      {/* <header className='App-header'>
-          <img src={logo} className='App-logo' alt='logo' />
-        </header> */}
-      <p>The current time is {currentTime}.</p>
       <ResponsiveDrawer values={values} hooks={hooks} />
-      <div id="playground">
-          <div id="playground_text">
-              <form onSubmit={formEmit} id="emit" method="GET" action='#'>
-                <textarea rows={30} cols={100} 
-                  name="prompt_text" id="prompt_text" placeholder="Message"
-                  value={prompt}
-                  onChange={e => setPrompt(e.target.value)}
-                />
-                <br/>
-                <input type="submit" value="Submit" />
-              </form>
-          </div>
-          
-      </div>
-
+      <MainComponent prompt={prompt} setPrompt={setPrompt} formEmit={formEmit} />
       <h2>Receive:</h2>
       <div id="log"></div>
     </div>
