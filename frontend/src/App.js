@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import ResponsiveDrawer from './Components/sideMenu'
 import './App.css';
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
   // const namespace = '/gpt3';
   
 
-  const socket = io('http://localhost:5000', {
+  const socket = io('http://10.10.10.114:5000/', {
     transports: ['websocket']
   });
 
@@ -38,32 +39,36 @@ function App() {
       if (cb) {
           cb();
       }
-  });
+  }); 
+  
+  const values = {
+    prompt: prompt,
+    max_tokens: max_tokens,
+    temperature: temperature,
+    top_p: top_p,
+    frequency_penalty: frequency_penalty,
+    presence_penalty: presence_penalty,
+  }
+  const hooks = {
+    setMax_tokens,
+    setTemperature,
+    setTop_p,
+    setFrequency_penalty,
+    setPresence_penalty
+  }
 
   const formEmit = function(event) {
     event.preventDefault();
-    const values = {
-        prompt: prompt,
-        max_tokens: max_tokens,
-        temperature: temperature,
-        top_p: top_p,
-        frequency_penalty: frequency_penalty,
-        presence_penalty: presence_penalty,
-      }
-      socket.emit('completion_request', values);
+    socket.emit('completion_request', values);
   };
 
-
- 
-  
   return (
     <div className='App'>
       {/* <header className='App-header'>
           <img src={logo} className='App-logo' alt='logo' />
         </header> */}
-
-
       <p>The current time is {currentTime}.</p>
+      <ResponsiveDrawer values={values} hooks={hooks} />
       <div id="playground">
           <div id="playground_text">
               <form onSubmit={formEmit} id="emit" method="GET" action='#'>
@@ -76,71 +81,7 @@ function App() {
                 <input type="submit" value="Submit" />
               </form>
           </div>
-          <div id="playground_menu">
-              <label htmlFor="engines">Engine:</label>
-              <select name="engines" id="engines">
-                <option value="davinci">davinci</option>
-                <option value="curie">curie</option>
-                <option value="babbage">babbage</option>
-                <option value="ada">ada</option>
-              </select> 
           
-              <h3>
-                  Response Length ({max_tokens})
-                  <br/>
-                  <input 
-                    type="range" min="50" max="400" 
-                    step="1" className="slider" id="max_tokens"
-                    value={max_tokens} 
-                    onChange={e => setMax_tokens(e.target.value)} 
-                  />
-              </h3>
-              <h3>
-                  Temperature (<span id="temperature_val">{temperature}</span>)
-                  <br/>
-                  <input 
-                    type="range" min="0" max="1" 
-                    step="0.01" className="slider" id="temperature"
-                    value={temperature} 
-                    onChange={e => setTemperature(e.target.value)}  
-                  />
-              </h3>
-
-              <h3>
-                  Top P (<span id="top_p_val">{top_p}</span>)
-                  <br/>
-                  <input 
-                    type="range" min="0" max="1" 
-                    step="0.01" className="slider" id="top_p"
-                    value={top_p} 
-                    onChange={e => setTop_p(e.target.value)} 
-                  />
-              </h3>
-
-              <h3>
-                  Frequency Penalty (<span id="frequency_penalty_val">{frequency_penalty}</span>)
-                  <br/>
-                  <input 
-                    type="range" min="0" max="1" 
-                    step="0.01" className="slider" id="frequency_penalty" 
-                    value={frequency_penalty} 
-                    onChange={e => setFrequency_penalty(e.target.value)} 
-                  />
-              </h3>
-              <h3>
-                  Presence Penalty (<span id="presence_penalty_val">{presence_penalty}</span>)
-                  <br/>
-                  <input 
-                    type="range" min="0" max="1" 
-                    step="0.01" className="slider" id="presence_penalty"
-                    value={presence_penalty} 
-                    onChange={e => setPresence_penalty(e.target.value)} 
-                  />
-              </h3>
-              <h3>
-                  Stop Sequences
-              </h3>
-          </div>
       </div>
 
       <h2>Receive:</h2>
