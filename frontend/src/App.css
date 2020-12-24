@@ -22,9 +22,7 @@ code {
   vertical-align: text-top;
 }
 #playground_menu {
-  background-color:#f00;
-  display: inline-block;
-  vertical-align: text-top;
+  background-color:#c3c3c3;
 }
 #playground {
   background-color:#00f;

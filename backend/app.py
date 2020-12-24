@@ -11,7 +11,7 @@ import time
 async_mode = None  # "threading", "eventlet" or "gevent", None=autochoose
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, async_mode=async_mode, cors_allowed_origins='http://localhost:3000')
+socketio = SocketIO(app, async_mode=async_mode, cors_allowed_origins='*')
 cors = CORS(app)
 thread = None
 thread_lock = Lock()
