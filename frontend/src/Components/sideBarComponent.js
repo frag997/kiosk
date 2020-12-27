@@ -31,7 +31,7 @@ function CustomSidebar(props) {
         <br/>
         <Title level={1}>Controls</Title>
         <Title level={5}>Engine:</Title>
-        <Select defaultValue="davinci" style={{ width: 120 }} onChange={e => setEngine(e)}>
+        <Select defaultValue={engine} style={{ width: 150 }} onChange={e => setEngine(e)}>
             <Option value="davinci">davinci</Option>
             <Option value="curie">curie</Option>
             <Option value="babbage">babbage</Option>

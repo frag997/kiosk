@@ -8,7 +8,14 @@ function FormComponent(props) {
     const { prompt, setPrompt, formEmit } = props;
     
     return (
-      <form onSubmit={formEmit} id="noter-text-area" method="GET" action='#'>
+      <form 
+        onSubmit={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        formEmit(event)
+      }} 
+        id="noter-text-area" 
+        method="GET" action='#'>
         <TextArea
             id="textarea"
             value={prompt}

@@ -26,11 +26,9 @@ function App() {
   const socket = io('http://localhost:5000', {
     transports: ['websocket']
   });
-
   socket.on('connect', function() {
       socket.emit('connected', {data: 'I\'m connected!'});
   });
-
   socket.on('completion', async function(msg, cb) {
       console.log('got back response')
       console.log(msg.data)
@@ -41,8 +39,8 @@ function App() {
       if (cb) {
           cb();
       }
-  }); 
-  
+  });
+
   const values = {
     engine: engine,
     prompt: prompt,
@@ -64,20 +62,21 @@ function App() {
     setStop_sequences
   }
 
-  const formEmit = function(event) {
-    console.log('emit', event, values)
-    event.preventDefault();
-    socket.emit('completion_request', values);
-  };
-
   const tabs = [
     { 
       title: 'Bot Controller',
       content: (
         <Content className="site-layout-background">
           <Title level={3}>Type your Message here</Title>
-          <FormComponent prompt={prompt} setPrompt={setPrompt} formEmit={formEmit} />
-          </Content>
+          <FormComponent 
+            prompt={prompt} 
+            setPrompt={setPrompt} 
+            formEmit={event => socket.emit('completion_request', values)} />
+          <div style={{marginTop: '20px'}}>
+            <Title>Response:</Title>
+            <Paragraph>{prompt}</Paragraph>
+          </div>
+        </Content>
         ),
       value: 0,
       icon: <HomeOutlined />,
@@ -138,10 +137,6 @@ function App() {
       </Sider>
       <Layout style={{ padding: '0 24px 24px' }}>
         {tabs[activeTab].content}
-        <div style={{marginTop: '20px'}}>
-          <Title>Server Response</Title>
-          <Paragraph id='log'/>
-        </div>
       </Layout>
     </Layout>
     <Footer>Mars.College</Footer>
