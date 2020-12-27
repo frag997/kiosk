@@ -8,7 +8,7 @@ import FormComponent from './Components/formComponent';
 
 // const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
-const { Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 function App() {
   const [engine, setEngine] = useState('');
@@ -99,12 +99,16 @@ function App() {
             minHeight: 280,
           }}
         >
+          <Title level={3}>Type your Message here</Title>
           <FormComponent prompt={prompt} setPrompt={setPrompt} formEmit={formEmit} />
         </Content>
-        <Paragraph id='log' st/>
+        <div style={{marginTop: '20px'}}>
+          <Title>Server Response</Title>
+          <Paragraph id='log' st/>
+        </div>
       </Layout>
     </Layout>
-    <Footer>Footer ¢</Footer>
+    <Footer>Mars.College</Footer>
   </Layout>
   );
 }

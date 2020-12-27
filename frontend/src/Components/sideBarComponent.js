@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Select, Slider, Typography } from 'antd';
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 const { Option } = Select;
 
 function CustomSidebar(props) {
@@ -39,7 +39,7 @@ function CustomSidebar(props) {
         </Select>
 
         <div>
-        <Title level={5} id="discrete-slider-always">
+        <Title level={5}>
             Response Length ({max_tokens})
         </Title>
         <Slider  marks={{50: '50', 400: '400'}}
@@ -54,10 +54,9 @@ function CustomSidebar(props) {
             />
         </div>
         <div>
-        <Title level={5} id="discrete-slider-always">
-            Temperature (<span id="temperature_val">{temperature}</span>)
+        <Title level={5}>
+            Temperature ({temperature})
         </Title>
-        
         <Slider marks={{0: '0', 1: '1'}}
                 defaultValue={temperature}
                 step={0.01}
@@ -71,8 +70,8 @@ function CustomSidebar(props) {
         </div>
 
         <div>
-            <Title level={5} id="discrete-slider-always">
-            Top P (<span id="top_p_val">{top_p}</span>)
+            <Title level={5}>
+                Top P ({top_p})
             </Title>
             <Slider marks={{0: '0', 1: '1'}}
                 defaultValue={top_p}
@@ -87,8 +86,8 @@ function CustomSidebar(props) {
         </div>
 
         <div>
-        <Title level={5} id="discrete-slider-always">
-            Frequency Penalty (<span id="frequency_penalty_val">{frequency_penalty}</span>)
+        <Title level={5}>
+            Frequency Penalty ({frequency_penalty})
         </Title>
         <Slider marks={{0: '0', 1: '1'}}
                 defaultValue={frequency_penalty}
@@ -102,8 +101,8 @@ function CustomSidebar(props) {
             />
         </div>
         <div>
-        <Title level={5} id="discrete-slider-always">
-            Presence Penalty (<span id="presence_penalty_val">{presence_penalty}</span>)
+        <Title level={5}>
+            Presence Penalty ({presence_penalty})
         </Title>
         <Slider marks={{0: '0', 1: '1'}}
             defaultValue={presence_penalty}
@@ -118,20 +117,21 @@ function CustomSidebar(props) {
         />
         </div>
         <div>
-        <Title level={5} id="discrete-slider-always">
+        <Title level={5}>
             Stop Sequences
         </Title>
-        <p>Enter sequences, press Tab</p>
+        <Paragraph>Type the word, press Enter</Paragraph>
         <Select
             value={stop_sequences}
             onChange={event => {
                 setStop_sequences(event)
             }} 
-            mode="tags" 
+            placeholder="Stop Words"
+            mode="tags"
             tokenSeparators={[',']} 
-            size={'default'} 
-            dropdownStyle={{ display: 'none' }} 
-            style={{ width: '100%' }}>
+            size={'large'} 
+            dropdownStyle={{ display: 'none' }}
+            style={{ width: '100%'}}>
         </Select>
         {/* <TextArea rows={4} /> */}
         </div>
