@@ -74,14 +74,7 @@ function App() {
     { 
       title: 'Bot Controller',
       content: (
-        <Content
-          className="site-layout-background"
-          style={{
-            padding: 24,
-            margin: 0,
-            minHeight: 280,
-          }}
-        >
+        <Content className="site-layout-background">
           <Title level={3}>Type your Message here</Title>
           <FormComponent prompt={prompt} setPrompt={setPrompt} formEmit={formEmit} />
           </Content>
@@ -93,36 +86,24 @@ function App() {
     { 
       title: 'Music Controller',
       content: (
-        <Content
-          className="site-layout-background"
-          style={{
-            padding: 24,
-            margin: 0,
-            minHeight: 280,
-          }}
-        >
+        <Content className="site-layout-background">
           <Title level={3}>Music Controller</Title>
         </Content>
         ),
       value: 1,
-      icon: <HomeOutlined />
+      icon: <HomeOutlined />,
+      sidebar: <div><Title>hello music</Title></div>
     },
     { 
       title: 'Images Controller',
       content: (
-        <Content
-          className="site-layout-background"
-          style={{
-            padding: 24,
-            margin: 0,
-            minHeight: 280,
-          }}
-        >
+        <Content className="site-layout-background">
           <Title level={3}>Images Controller</Title>
         </Content>
         ),
       value: 2,
-      icon: <HomeOutlined />
+      icon: <HomeOutlined />,
+      sidebar: <div><Title>hello images</Title></div>
     }
   ]
 
