@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
 import io from 'socket.io-client';
-import ResponsiveDrawer from './Components/sideBarComponent'
-import MainComponent from './Components/formComponent';
+
+import { Layout, Menu, Typography } from 'antd';
+import { HomeOutlined } from '@ant-design/icons';
+
+import CustomSidebar from './Components/sideBarComponent';
+import FormComponent from './Components/formComponent';
 import './App.css';
 
+const { Header, Content, Footer, Sider } = Layout;
+const { Title, Paragraph } = Typography;
+
 function App() {
+  const [engine, setEngine] = useState('');
   const [prompt, setPrompt] = useState('');
   const [max_tokens, setMax_tokens] = useState(125);
   const [temperature, setTemperature] = useState(0.9);
@@ -12,30 +20,29 @@ function App() {
   const [frequency_penalty, setFrequency_penalty] = useState(0.9);
   const [presence_penalty, setPresence_penalty] = useState(0.9);
   const [stop_sequences, setStop_sequences] = useState([]);
+  const [activeTab, setActiveTab] = useState(0);
 
 
-  const socket = io('http://10.10.10.114:5000/', {
+  const socket = io('http://localhost:5000', {
     transports: ['websocket']
   });
-
   socket.on('connect', function() {
       socket.emit('connected', {data: 'I\'m connected!'});
   });
-
-  socket.on('completion', function(msg, cb) {
+  socket.on('completion', async function(msg, cb) {
       console.log('got back response')
       console.log(msg.data)
-      document.getElementById('log').append(msg.data);
 
-      const newPrompt = prompt + msg.data
+      const newPrompt = prompt + ' ' + msg.data
       setPrompt(newPrompt)
 
       if (cb) {
           cb();
       }
-  }); 
-  
+  });
+
   const values = {
+    engine: engine,
     prompt: prompt,
     max_tokens: max_tokens,
     temperature: temperature,
@@ -45,6 +52,7 @@ function App() {
     stop_sequences: stop_sequences
   }
   const hooks = {
+    setEngine,
     setPrompt,
     setMax_tokens,
     setTemperature,
@@ -54,19 +62,85 @@ function App() {
     setStop_sequences
   }
 
-  const formEmit = function(event) {
-    console.log('emit', event, values)
-    event.preventDefault();
-    socket.emit('completion_request', values);
-  };
-  
+  const tabs = [
+    { 
+      title: 'Bot Controller',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={3}>Type your Message here</Title>
+          <FormComponent 
+            prompt={prompt} 
+            setPrompt={setPrompt} 
+            formEmit={event => socket.emit('completion_request', values)} />
+          <div style={{marginTop: '20px'}}>
+            <Title>Response:</Title>
+            <Paragraph>{prompt}</Paragraph>
+          </div>
+        </Content>
+        ),
+      value: 0,
+      icon: <HomeOutlined />,
+      sidebar:<CustomSidebar hooks={hooks} values={values} />
+    },
+    { 
+      title: 'Music Controller',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={3}>Music Controller</Title>
+        </Content>
+        ),
+      value: 1,
+      icon: <HomeOutlined />,
+      sidebar: <div><Title>hello music</Title></div>
+    },
+    { 
+      title: 'Images Controller',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={3}>Images Controller</Title>
+        </Content>
+        ),
+      value: 2,
+      icon: <HomeOutlined />,
+      sidebar: <div><Title>hello images</Title></div>
+    }
+  ]
+
   return (
-    <div className='App'>
-      <ResponsiveDrawer values={values} hooks={hooks} />
-      <MainComponent prompt={prompt} setPrompt={setPrompt} formEmit={formEmit} />
-      <h2>Receive:</h2>
-      <div id="log"></div>
-    </div>
+    <Layout>
+    <Header className="header">
+      <div className="logo" />
+      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['0']}>
+      {
+        tabs.map((tab, index) => {
+          return <Menu.Item
+            key={index} 
+            icon={tab.icon}
+            onClick={() => setActiveTab(tab.value)}
+          >
+            {tab.title}
+          </Menu.Item>
+        })
+      }
+      </Menu>
+    </Header>
+    <Layout>
+      <Sider width={200} className="site-layout-background">
+        <Menu
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['1']}
+          style={{ height: '100%', borderRight: 0 }}
+        >
+          {tabs[activeTab].sidebar}
+        </Menu>
+      </Sider>
+      <Layout style={{ padding: '0 24px 24px' }}>
+        {tabs[activeTab].content}
+      </Layout>
+    </Layout>
+    <Footer>Mars.College</Footer>
+  </Layout>
   );
 }
 
