@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import io from 'socket.io-client';
-import './App.css';
+
 import { Layout, Menu, Typography } from 'antd';
-// import { UserOutlined, LaptopOsutlined, NotificationOutlined } from '@ant-design/icons';
+import { HomeOutlined } from '@ant-design/icons';
+
 import CustomSidebar from './Components/sideBarComponent';
 import FormComponent from './Components/formComponent';
+import './App.css';
 
-// const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Paragraph } = Typography;
 
@@ -19,6 +20,7 @@ function App() {
   const [frequency_penalty, setFrequency_penalty] = useState(0.9);
   const [presence_penalty, setPresence_penalty] = useState(0.9);
   const [stop_sequences, setStop_sequences] = useState([]);
+  const [activeTab, setActiveTab] = useState(0);
 
 
   const socket = io('http://localhost:5000', {
@@ -34,7 +36,6 @@ function App() {
       console.log(msg.data)
 
       const newPrompt = prompt + ' ' + msg.data
-      document.getElementById('log').append(newPrompt);
       setPrompt(newPrompt)
 
       if (cb) {
@@ -68,29 +69,11 @@ function App() {
     event.preventDefault();
     socket.emit('completion_request', values);
   };
-  
-  return (
-    <Layout>
-    <Header className="header">
-      <div className="logo" />
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-        <Menu.Item key="1">Bot Controller</Menu.Item>
-        <Menu.Item key="2">Music Controller</Menu.Item>
-        <Menu.Item key="3">Visuals Controller</Menu.Item>
-      </Menu>
-    </Header>
-    <Layout>
-      <Sider width={200} className="site-layout-background">
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          style={{ height: '100%', borderRight: 0 }}
-        >
-          <CustomSidebar hooks={hooks} values={values} />
-        </Menu>
-      </Sider>
-      <Layout style={{ padding: '0 24px 24px' }}>
+
+  const tabs = [
+    { 
+      title: 'Bot Controller',
+      content: (
         <Content
           className="site-layout-background"
           style={{
@@ -101,10 +84,82 @@ function App() {
         >
           <Title level={3}>Type your Message here</Title>
           <FormComponent prompt={prompt} setPrompt={setPrompt} formEmit={formEmit} />
+          </Content>
+        ),
+      value: 0,
+      icon: <HomeOutlined />,
+      sidebar:<CustomSidebar hooks={hooks} values={values} />
+    },
+    { 
+      title: 'Music Controller',
+      content: (
+        <Content
+          className="site-layout-background"
+          style={{
+            padding: 24,
+            margin: 0,
+            minHeight: 280,
+          }}
+        >
+          <Title level={3}>Music Controller</Title>
         </Content>
+        ),
+      value: 1,
+      icon: <HomeOutlined />
+    },
+    { 
+      title: 'Images Controller',
+      content: (
+        <Content
+          className="site-layout-background"
+          style={{
+            padding: 24,
+            margin: 0,
+            minHeight: 280,
+          }}
+        >
+          <Title level={3}>Images Controller</Title>
+        </Content>
+        ),
+      value: 2,
+      icon: <HomeOutlined />
+    }
+  ]
+
+  return (
+    <Layout>
+    <Header className="header">
+      <div className="logo" />
+      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['0']}>
+      {
+        tabs.map((tab, index) => {
+          return <Menu.Item
+            key={index} 
+            icon={tab.icon}
+            onClick={() => setActiveTab(tab.value)}
+          >
+            {tab.title}
+          </Menu.Item>
+        })
+      }
+      </Menu>
+    </Header>
+    <Layout>
+      <Sider width={200} className="site-layout-background">
+        <Menu
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['1']}
+          style={{ height: '100%', borderRight: 0 }}
+        >
+          {tabs[activeTab].sidebar}
+        </Menu>
+      </Sider>
+      <Layout style={{ padding: '0 24px 24px' }}>
+        {tabs[activeTab].content}
         <div style={{marginTop: '20px'}}>
           <Title>Server Response</Title>
-          <Paragraph id='log' st/>
+          <Paragraph id='log'/>
         </div>
       </Layout>
     </Layout>
