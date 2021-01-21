@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import io from 'socket.io-client';
-
 import { Layout, Menu, Typography } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 
 import CustomSidebar from './Components/sideBarComponent';
 import FormComponent from './Components/formComponent';
+import CalendarComponent from './Components/calendarComponent';
+
 import './App.css';
+import LogoImage from './images/logo.png'
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Paragraph } = Typography;
@@ -63,8 +65,19 @@ function App() {
   }
 
   const tabs = [
+    {
+      title: 'Calendar',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={3}>Calendar</Title>
+          <CalendarComponent/>
+        </Content>
+        ),
+      icon: <HomeOutlined />,
+      sidebar: <div><Title>Calendar Sidebar</Title></div>
+    },
     { 
-      title: 'Bot Controller',
+      title: 'Bots',
       content: (
         <Content className="site-layout-background">
           <Title level={3}>Type your Message here</Title>
@@ -78,41 +91,54 @@ function App() {
           </div>
         </Content>
         ),
-      value: 0,
       icon: <HomeOutlined />,
       sidebar:<CustomSidebar hooks={hooks} values={values} />
     },
     { 
-      title: 'Music Controller',
+      title: 'Music',
       content: (
         <Content className="site-layout-background">
           <Title level={3}>Music Controller</Title>
         </Content>
         ),
-      value: 1,
       icon: <HomeOutlined />,
-      sidebar: <div><Title>hello music</Title></div>
+      sidebar: <div><Title>Music Sidebar</Title></div>
     },
     { 
-      title: 'Images Controller',
+      title: 'Images',
       content: (
         <Content className="site-layout-background">
           <Title level={3}>Images Controller</Title>
         </Content>
         ),
-      value: 2,
       icon: <HomeOutlined />,
-      sidebar: <div><Title>hello images</Title></div>
-    }
+      sidebar: <div><Title>Images Sidebar</Title></div>
+    },
+    {
+      title: 'Weather',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={3}>Weather Forecast</Title>
+        </Content>
+        ),
+      icon: <HomeOutlined />,
+      sidebar: <div><Title>Weather Forecast</Title></div>
+    },
   ]
-
   return (
     <Layout>
     <Header className="header">
-      <div className="logo" />
+      <div className="logo">
+        <img 
+          src={LogoImage} 
+          style={{ width: 64, height: 64, backgroundImage: {LogoImage}, float:'left', backgroundColor:'#3d3d3d'}}
+          alt="logo"
+        ></img>
+      </div>
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['0']}>
       {
         tabs.map((tab, index) => {
+          tab.value = index;
           return <Menu.Item
             key={index} 
             icon={tab.icon}
