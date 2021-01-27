@@ -6,10 +6,13 @@ from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 import time
 
+from music import urls_blueprint
+
 #import gpt3
 
 async_mode = None  # "threading", "eventlet" or "gevent", None=autochoose
 app = Flask(__name__)
+app.register_blueprint(urls_blueprint)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=async_mode, cors_allowed_origins='*')
 cors = CORS(app)
@@ -58,6 +61,7 @@ def receive_gpt3_request(message):
 
 @socketio.on('connect')
 def test_connect():
+    # print('hello world')
     global thread
     with thread_lock:
         if thread is None:

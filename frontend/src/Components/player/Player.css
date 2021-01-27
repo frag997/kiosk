@@ -1,0 +1,81 @@
+.player {
+    background-color: #e2e6ea;
+    padding: 10px 50px 10px 50px;
+    border-top: #328f7c 1px solid;
+}
+
+.player-i {
+    margin-left: 10px;
+    cursor: pointer;
+    color: #85898d !important;
+}
+
+.player-i:first-child {
+    margin-left: 0px;
+}
+
+.player-i:active {
+    color: #328f7c !important;
+}
+
+.player-i-active {
+    margin-left: 10px;
+    cursor: pointer;
+    color: #328f7c !important;
+}
+
+.player-i-ctrls {
+    margin-right: 30px;
+    cursor: pointer;
+    color: #328f7c;
+}
+
+.player-i-ctrls:last-child {
+    margin-left: 3px;
+    margin-right: 7px;
+}
+
+.player-time {
+    color: #328f7c;
+    font-size: 2em;
+    font-weight: 500;
+}
+
+.player-progress-bar {
+    background-color: #328f7c !important;
+}
+
+.MuiLinearProgress-bar{
+    background-color: #51F0CC !important;
+}
+
+.mixer {
+    display: inline;
+}
+#mixer-i {
+    color: #328f7c;
+}
+
+.subtitle {
+    text-align: center;
+}
+
+.mix-ch {
+    margin-top: 20px;
+}
+
+.mix-trk {
+    display: grid;
+    padding-right: 10px !important;
+}
+
+.mix-volume-slider{
+    padding: 0px !important;
+    color: #328f7c !important;
+}
+
+.mix-volume-i {
+    font-size: 1.2em;
+    color: #969FAA;
+    margin-bottom: 5px;
+}

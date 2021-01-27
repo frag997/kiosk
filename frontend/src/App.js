@@ -3,9 +3,10 @@ import io from 'socket.io-client';
 import { Layout, Menu, Typography } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 
-import CustomSidebar from './Components/sideBarComponent';
-import FormComponent from './Components/formComponent';
-import CalendarComponent from './Components/calendarComponent';
+import CustomSidebar from './Containers/sideBarContainer';
+import FormContainer from './Containers/formContainer';
+import CalendarContainer from './Containers/calendarContainer';
+import MusicContainer from './Containers/musicContainer';
 
 import './App.css';
 import LogoImage from './images/logo.png'
@@ -70,7 +71,7 @@ function App() {
       content: (
         <Content className="site-layout-background">
           <Title level={3}>Calendar</Title>
-          <CalendarComponent/>
+          <CalendarContainer/>
         </Content>
         ),
       icon: <HomeOutlined />,
@@ -81,12 +82,12 @@ function App() {
       content: (
         <Content className="site-layout-background">
           <Title level={3}>Type your Message here</Title>
-          <FormComponent 
+          <FormContainer 
             prompt={prompt} 
             setPrompt={setPrompt} 
             formEmit={event => socket.emit('completion_request', values)} />
           <div style={{marginTop: '20px'}}>
-            <Title>Response:</Title>
+            <Title>Bot Controller:</Title>
             <Paragraph>{prompt}</Paragraph>
           </div>
         </Content>
@@ -99,6 +100,7 @@ function App() {
       content: (
         <Content className="site-layout-background">
           <Title level={3}>Music Controller</Title>
+          <MusicContainer />
         </Content>
         ),
       icon: <HomeOutlined />,
