@@ -62,7 +62,6 @@ class ChordChart extends React.Component {
         var url  = 'http://localhost:5000/song';
 
         var data = JSON.stringify(this.state.chart);
-        console.log("D", data);
     
         fetch(url, {
             headers: {
@@ -71,14 +70,15 @@ class ChordChart extends React.Component {
             mode: 'cors',
             method: 'POST',
             body: data
-        }).then(response => response.arrayBuffer())
+        }).then(response => {
+            return response.arrayBuffer()
+        })
         .then(function(buff){
-            loadMidi(buff);
+            return loadMidi(buff);
         })
         .catch((error) => {
             loading(false);
-            console.log(error)
-            sendAlert("error", "Error parsing file. Please check your input");
+            return sendAlert("error", "Error parsing file. Please check your input");
         });
     }
 
@@ -101,16 +101,13 @@ class ChordChart extends React.Component {
     }
 
     addMeasures = (event) => {
-        console.log("ADD", this.state.chart.measures);
         event.preventDefault();
         let chart = this.state.chart;
         let measureKeys = Object.keys(chart.measures);
         let next = measureKeys.length + 1;        
         while(measureKeys.includes(next.toString())){
-            console.log("NNNN", next);
             next = next+1
         }
-        console.log("N", next);
         chart.measures[next] = [];
         this.setState({chart: chart})
     }

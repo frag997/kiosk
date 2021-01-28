@@ -33,8 +33,6 @@ function App() {
       socket.emit('connected', {data: 'I\'m connected!'});
   });
   socket.on('completion', async function(msg, cb) {
-      console.log('got back response')
-      console.log(msg.data)
 
       const newPrompt = prompt + ' ' + msg.data
       setPrompt(newPrompt)

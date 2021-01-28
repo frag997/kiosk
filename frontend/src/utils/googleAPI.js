@@ -50,18 +50,13 @@ export default {
         ).flat()
 
         const weekly = filterByOneProperty("RRULE:FREQ=WEEKLY", recurringEvents)
-        const stepBeforeWeekly = recurringByProperty(
+        const recurringWeekly = recurringByProperty(
           removeRecurrenceProperty(weekly),
           handleWeekly,
           calendar,
           config.weeklyRecurrence
         ).flat()
-        const recurringWeekly = stepBeforeWeekly.filter((obj, index) => {
-          return (obj.title !== index.title && obj.start !== index.start)
-        })
-        console.log(stepBeforeWeekly)
-        console.log(recurringWeekly)
-
+        
         const monthly = filterByOneProperty("RRULE:FREQ=MONTHLY", recurringEvents)
         // dateOfMonth will have only one item in the array, so this will verify "RRULE:FREQ=MONTHLY"
         const dateOfMonth = monthly
