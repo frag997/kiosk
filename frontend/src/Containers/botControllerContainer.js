@@ -1,11 +1,43 @@
 import React from 'react';
-
-import { Select, Slider, Typography } from 'antd';
+import { Select, Slider, Input, Typography } from 'antd';
 
 const { Title, Paragraph } = Typography;
 const { Option } = Select;
 
-function CustomSidebar(props) {
+const { TextArea } = Input;
+
+export function BotFormComponent(props) {
+    const { prompt, setPrompt, formEmit } = props;
+    
+    return (
+        <div>
+            <Title level={4}>Type your Message here:</Title>
+            <form 
+                onSubmit={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                formEmit(event)
+            }} 
+                id="noter-text-area" 
+                method="GET" action='#'>
+                <TextArea
+                    id="textarea"
+                    value={prompt}
+                    onChange={e => setPrompt(e.target.value)}
+                    placeholder="Type your message"
+                    autoSize={{ minRows: 18 }}
+                />
+                <input type="submit" value="Save" />
+            </form>
+            <div style={{marginTop: '20px'}}>
+                <Title>Bot Response:</Title>
+                <Paragraph>{prompt}</Paragraph>
+            </div>
+        </div>
+    )
+}
+
+export function BotCustomSidebar(props) {
   const {
     engine,
     max_tokens,
@@ -31,7 +63,7 @@ function CustomSidebar(props) {
         <br/>
         <Title level={1}>Controls</Title>
         <Title level={5}>Engine:</Title>
-        <Select defaultValue={engine} style={{ width: 150 }} onChange={e => setEngine(e)}>
+        <Select defaultValue={engine || "davinci"} style={{ width: 150 }} onChange={e => setEngine(e)}>
             <Option value="davinci">davinci</Option>
             <Option value="curie">curie</Option>
             <Option value="babbage">babbage</Option>
@@ -133,10 +165,7 @@ function CustomSidebar(props) {
             dropdownStyle={{ display: 'none' }}
             style={{ width: '100%'}}>
         </Select>
-        {/* <TextArea rows={4} /> */}
         </div>
     </div>
   );
 }
-
-export default CustomSidebar;

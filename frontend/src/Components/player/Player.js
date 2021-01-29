@@ -37,7 +37,7 @@ function buildControls(song){
     loading(false)
     sendAlert("success", "Your song is ready!")
 
-    // Call player cb functions
+    // Call  cb functions
     this.skipBack();
     this.addMixer();
     this.addDownloadFile();

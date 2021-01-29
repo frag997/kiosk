@@ -3,8 +3,7 @@ import io from 'socket.io-client';
 import { Layout, Menu, Typography } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 
-import CustomSidebar from './Containers/sideBarContainer';
-import FormContainer from './Containers/formContainer';
+import { BotCustomSidebar, BotFormComponent } from './Containers/botControllerContainer';
 import CalendarContainer from './Containers/calendarContainer';
 import MusicContainer from './Containers/musicContainer';
 
@@ -64,6 +63,20 @@ function App() {
   }
 
   const tabs = [
+    { 
+      title: 'Bots',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={1}>Bot Controller</Title>
+          <BotFormComponent 
+            prompt={prompt} 
+            setPrompt={setPrompt} 
+            formEmit={event => socket.emit('completion_request', values)} />
+        </Content>
+        ),
+      icon: <HomeOutlined />,
+      sidebar:<BotCustomSidebar hooks={hooks} values={values} />
+    },
     {
       title: 'Calendar',
       content: (
@@ -74,24 +87,6 @@ function App() {
         ),
       icon: <HomeOutlined />,
       sidebar: <div><Title>Calendar Sidebar</Title></div>
-    },
-    { 
-      title: 'Bots',
-      content: (
-        <Content className="site-layout-background">
-          <Title level={3}>Type your Message here</Title>
-          <FormContainer 
-            prompt={prompt} 
-            setPrompt={setPrompt} 
-            formEmit={event => socket.emit('completion_request', values)} />
-          <div style={{marginTop: '20px'}}>
-            <Title>Bot Controller:</Title>
-            <Paragraph>{prompt}</Paragraph>
-          </div>
-        </Content>
-        ),
-      icon: <HomeOutlined />,
-      sidebar:<CustomSidebar hooks={hooks} values={values} />
     },
     { 
       title: 'Music',

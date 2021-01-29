@@ -49,6 +49,7 @@ export default class Calendar extends Component {
       <BigCalendar
         localizer={localizer}
         events={this.state.events}
+        defaultView="agenda"
         style={{ height: "100vh" }} />
     </div>
 }
