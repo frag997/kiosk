@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import Measure from "./Measure";
 import ChartControls from "./ChartControls";
 
 import { loadMidi } from "../player/Player";
-import { loading, sendAlert } from "../utils/CustomAlert";
+import { loading, sendAlert } from "../../utils/CustomAlert";
 
 import "./ChordChart.css";
 

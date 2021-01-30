@@ -1,10 +1,10 @@
 import React, { useEffect } from "react"
 
-import { loading, sendAlert } from "../utils/CustomAlert";
+import { loading, sendAlert } from "../../utils/CustomAlert";
 
 // Material UI
 import { Drawer, Grid, Slider, Fab, Button, Dialog, DialogContent, DialogTitle } from '@material-ui/core';
-import CustomAutocomplete from "../utils/CustomAutocomplete";
+import CustomAutocomplete from "../../utils/CustomAutocomplete";
 
 // Icons
 import { RiAddLine, RiSubtractLine, RiMusic2Line, RiCheckLine, RiUploadCloud2Line, RiFileUploadLine } from 'react-icons/ri';
@@ -32,12 +32,12 @@ function TempoSelect(props){
             setTempo(20);
         }
     }
-
+    
     useEffect(() => {
         if(props.updateTempo){
             props.updateTempo("tempo", tempo.toString());
         }
-     }, [tempo]);
+     }, [props, tempo]);
 
 
     return(
@@ -176,7 +176,7 @@ function GrooveSelect(props) {
 
     useEffect(() => {
         getGrooves();
-      }, []);
+      });
 
       return(
         <Grid container justify="space-between" alignItems="center">

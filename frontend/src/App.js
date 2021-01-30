@@ -11,7 +11,7 @@ import './App.css';
 import LogoImage from './images/logo.png'
 
 const { Header, Content, Footer, Sider } = Layout;
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 function App() {
   const [engine, setEngine] = useState('');

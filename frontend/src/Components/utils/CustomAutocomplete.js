@@ -55,7 +55,6 @@ export default function CustomAutocomplete(props) {
     let options = props.options;
     let id = props.id;
     let label = props.label;
-    let value = props.value;
 
     const filterOptions = createFilterOptions({
         ignoreCase: props.ignoreCase,

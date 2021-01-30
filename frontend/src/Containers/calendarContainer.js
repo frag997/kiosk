@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import googleAPI from  "../utils/googleAPI"
+import googleAPI from  "../utils/calendar/googleAPI"
 
 const localizer = BigCalendar.momentLocalizer(moment)
 
@@ -50,6 +50,6 @@ export default class Calendar extends Component {
         localizer={localizer}
         events={this.state.events}
         defaultView="agenda"
-        style={{ height: "100vh" }} />
+        style={{ height: "75vh" }} />
     </div>
 }

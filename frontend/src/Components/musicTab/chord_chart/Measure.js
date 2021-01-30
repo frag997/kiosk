@@ -3,8 +3,8 @@ import React from "react";
 import { Fab } from '@material-ui/core';
 import { RiAddLine, RiSubtractLine } from 'react-icons/ri';
 
-import { AVAILABLE_CHORDS } from "../../utils/Chords";
-import CustomAutocomplete from "../utils/CustomAutocomplete";
+import { AVAILABLE_CHORDS } from "../../../utils/music/Chords";
+import CustomAutocomplete from "../../utils/CustomAutocomplete";
 import "./ChordChart.css";
 
 
@@ -41,7 +41,7 @@ class Measure extends React.Component {
         let chords = this.state.chords;
         delete chords[index];
 
-        if((Object.keys(chords).length == 0) && (this.props.deleteMeasure)){
+        if((Object.keys(chords).length === 0) && (this.props.deleteMeasure)){
             this.props.deleteMeasure(this.state.id);
         }else{
             let newChords = []
@@ -63,7 +63,7 @@ class Measure extends React.Component {
 
     onChangeChord = (event, value) => {
         // Remove automatic "-option" from id
-        if (value != ""){
+        if (value !== ""){
             let id = event.target.id.split("-")[0]
             let chords = this.state.chords;
             chords[id] = value;

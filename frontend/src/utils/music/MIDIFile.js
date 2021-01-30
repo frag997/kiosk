@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 var UTF8 = {
 	// non UTF8 encoding detection (cf README file for details)
 	'isNotUTF8': function (bytes, byteOffset, byteLength) {
@@ -11,16 +12,16 @@ var UTF8 = {
 	// UTF8 decoding functions
 	'getCharLength': function (theByte) {
 		// 4 bytes encoded char (mask 11110000)
-		if (0xF0 == (theByte & 0xF0)) {
+		if (0xF0 === (theByte & 0xF0)) {
 			return 4;
 			// 3 bytes encoded char (mask 11100000)
-		} else if (0xE0 == (theByte & 0xE0)) {
+		} else if (0xE0 === (theByte & 0xE0)) {
 			return 3;
 			// 2 bytes encoded char (mask 11000000)
-		} else if (0xC0 == (theByte & 0xC0)) {
+		} else if (0xC0 === (theByte & 0xC0)) {
 			return 2;
 			// 1 bytes encoded char
-		} else if (theByte == (theByte & 0x7F)) {
+		} else if (theByte === (theByte & 0x7F)) {
 			return 1;
 		}
 		return 0;
@@ -51,7 +52,7 @@ var UTF8 = {
 		mask = '00000000'.slice(0, charLength) + 1 + '00000000'.slice(charLength + 1);
 		if (bytes[byteOffset] & (parseInt(mask, 2))) {
 			throw Error('Index ' + byteOffset + ': A ' + charLength + ' bytes' +
-				' encoded char' + ' cannot encode the ' + (charLength + 1) + 'th rank bit to 1.');
+				' encoded char cannot encode the ' + (charLength + 1) + 'th rank bit to 1.');
 		}
 		// Reading the first byte
 		mask = '0000'.slice(0, charLength + 1) + '11111111'.slice(charLength + 1);
@@ -1103,7 +1104,7 @@ MIDIFile.prototype.parseSong = function () {
 					if (events[i].subtype == MIDIEvents.EVENT_MIDI_CONTROLLER) {
 						if (events[i].param1 == 7) {
 							if (events[i].channel != 9) {
-								var track = this.takeTrack(events[i].channel, song);
+								track = this.takeTrack(events[i].channel, song);
 								track.volume = events[i].param2/127||0.000001;
 								//console.log('volume', track.volume,'for',events[i].channel);
 							}

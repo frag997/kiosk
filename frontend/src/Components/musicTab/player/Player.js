@@ -1,16 +1,17 @@
+/* eslint-disable no-func-assign */
 import React from "react"
 import WebAudioFontPlayer from 'webaudiofont'
-import MIDIFile from '../../utils/MIDIFile'
+import MIDIFile from '../../../utils/music/MIDIFile'
 import "./Player.css"
 
 import Mixer from "./Mixer";
-import { loading, sendAlert } from "../utils/CustomAlert";
+import { loading, sendAlert } from "../../utils/CustomAlert"
 
 // Material
 import { Grid, Box, LinearProgress } from '@material-ui/core';
 
 // Icons
-import { RiPlayLine, RiRepeat2Line, RiPauseLine, RiSkipBackLine, RiDownload2Line, RiEqualizerFill  } from 'react-icons/ri';
+import { RiPlayLine, RiRepeat2Line, RiPauseLine, RiSkipBackLine, RiDownload2Line  } from 'react-icons/ri';
 
 
 export function loadMidi(buff){
@@ -126,9 +127,9 @@ class Player extends React.Component {
             this.player.loader.startLoad(this.audio_context, info.url, info.variable);
         }
 
-        for (var i = 0; i < song.beats.length; i++) {
-            var nn = this.player.loader.findDrum(song.beats[i].n);
-            var info = this.player.loader.drumInfo(nn);
+        for (let i = 0; i < song.beats.length; i++) {
+            let nn = this.player.loader.findDrum(song.beats[i].n);
+            let info = this.player.loader.drumInfo(nn);
             song.beats[i].info = info;
             song.beats[i].id = nn;
             this.player.loader.startLoad(this.audio_context, info.url, info.variable);
@@ -156,12 +157,12 @@ class Player extends React.Component {
         }
         for (var b = 0; b < song.beats.length; b++) {
             var beat = song.beats[b];
-            for (var i = 0; i < beat.notes.length; i++) {
+            for (let i = 0; i < beat.notes.length; i++) {
                 if (beat.notes[i].when >= start && beat.notes[i].when < end) {
-                    var when = songStart + beat.notes[i].when;
-                    var duration = 1.5;
-                    var instr = beat.info.variable;
-                    var v = beat.volume / 2;
+                    let when = songStart + beat.notes[i].when;
+                    let duration = 1.5;
+                    let instr = beat.info.variable;
+                    let v = beat.volume / 2;
                     player.queueWaveTable(audioContext, input, window[instr], when, beat.n, duration, v);
                 }
             }
@@ -186,7 +187,11 @@ class Player extends React.Component {
         this.setIconStyle("pause", "player-i");
         this.setIconStyle("play", "player-i-active");
         if (this.state.song.song != null){    
-            this.state.song.paused = false;            
+            this.setState({
+                song: {
+                    paused: false
+                }
+            })
             this.audio_context.resume().then(function (){
                 tick();
             });
@@ -194,7 +199,11 @@ class Player extends React.Component {
     }
 
     pause = () => {
-        this.state.song.paused = true;
+        this.setState({
+            song: {
+                paused: true
+            }
+        })
         this.audio_context.suspend();
         this.setIconStyle("pause", "player-i-active");
         this.setIconStyle("play", "player-i");
@@ -216,7 +225,11 @@ class Player extends React.Component {
     }
 
     repeat = () => {
-        this.state.song.repeat = !this.state.song.repeat;
+        this.setState({
+            song: {
+                repeat: !this.state.song.repeat
+            }
+        })
         let v = this.state.song.repeat ? "player-i-active" : "player-i";
         this.setIconStyle("repeat", v);
     }
@@ -252,7 +265,7 @@ class Player extends React.Component {
         let uTime = cTime + 0.15;
 
         for (const l of this.state.song.lyrics) {
-            if((l.playTime/1000 == cTime) || ((l.playTime/1000 >= dTime) && (l.playTime/1000 <= uTime))){
+            if((l.playTime/1000 === cTime) || ((l.playTime/1000 >= dTime) && (l.playTime/1000 <= uTime))){
                 let chordId = l.text.replace(/\s/g, '');
                 let currentChordDiv = document.getElementById("div-"+chordId);
                 currentChordDiv.focus();

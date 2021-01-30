@@ -14,7 +14,6 @@ const handleDayOfMonth = (calendar, recurrence, e) => {
     ? moment(e.start.date)
     : moment(e.end.dateTime)
 
-  const day = start.day()
   const date = start.date()
   let counter
 
