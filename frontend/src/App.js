@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Typography } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
+import { RobotOutlined, CalendarOutlined, CloudOutlined, SoundOutlined, FireOutlined, HomeOutlined } from '@ant-design/icons';
 
 import { BotCustomSidebar, BotFormComponent } from './Containers/botControllerContainer';
 import CalendarContainer from './Containers/calendarContainer';
 import MusicContainer from './Containers/musicContainer';
+import { FluidSimulatorContainer, FluidSimulatorsSidebar }from './Containers/fluidSimulatorContainer'
+
 import { socket } from './API'
 
 import './App.css';
@@ -14,42 +16,39 @@ const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
 
 function App() {
-  const [engine, setEngine] = useState('');
-  const [prompt, setPrompt] = useState('');
-  const [max_tokens, setMax_tokens] = useState(125);
-  const [temperature, setTemperature] = useState(0.9);
-  const [top_p, setTop_p] = useState(0.9);
-  const [frequency_penalty, setFrequency_penalty] = useState(0.9);
-  const [presence_penalty, setPresence_penalty] = useState(0.9);
-  const [stop_sequences, setStop_sequences] = useState([]);
-  const [activeTab, setActiveTab] = useState(0);
+ 
+  const [botConfig, setBotConfig] = useState({
+    engine: 'davinci',
+    prompt: '',
+    max_tokens: 125,
+    temperature: 0.9,
+    top_p: 0.9,
+    frequency_penalty: 0.9,
+    presence_penalty: 0.9,
+    stop_sequences: [],
+  })
 
+  const [fluidConfig, setFluidConfig] = useState({
+    textureDownsample: 1,
+    densityDissipation: 0.98,
+    velocityDissipation: 0.99,
+    pressureDissipation: 0.8,
+    pressureIterations: 25,
+    curl: 30,
+    splatRadius: 0.005,
+    animationRef: ''
+  });
+
+  const [activeTab, setActiveTab] = useState(0);
+  
   socket.on('completion', async function (msg, cb) {
     const newPrompt = prompt + ' ' + msg.data
-    setPrompt(newPrompt)
-  });  
-
-  const values = {
-    engine: engine,
-    prompt: prompt,
-    max_tokens: max_tokens,
-    temperature: temperature,
-    top_p: top_p,
-    frequency_penalty: frequency_penalty,
-    presence_penalty: presence_penalty,
-    stop_sequences: stop_sequences
-  }
-  const hooks = {
-    setEngine,
-    setPrompt,
-    setMax_tokens,
-    setTemperature,
-    setTop_p,
-    setFrequency_penalty,
-    setPresence_penalty,
-    setStop_sequences
-  }
-
+    setBotConfig({
+      ...botConfig,
+      prompt: newPrompt
+    })
+  });
+  
   const tabs = [
     { 
       title: 'Bots',
@@ -57,13 +56,12 @@ function App() {
         <Content className="site-layout-background">
           <Title level={1}>Bot Controller</Title>
           <BotFormComponent 
-            prompt={prompt} 
-            setPrompt={setPrompt} 
-            formEmit={event => socket.emit('completion_request', values)} />
+            prompt={botConfig.prompt} 
+            formEmit={event => socket.emit('completion_request', botConfig)} />
         </Content>
         ),
-      icon: <HomeOutlined />,
-      sidebar:<BotCustomSidebar hooks={hooks} values={values} />
+      icon: <RobotOutlined />,
+      sidebar:<BotCustomSidebar values={botConfig}  hooks={setBotConfig}/>
     },
     {
       title: 'Calendar',
@@ -73,8 +71,29 @@ function App() {
           <CalendarContainer/>
         </Content>
         ),
-      icon: <HomeOutlined />,
+      icon: <CalendarOutlined />,
       sidebar: <div></div>
+    },
+    {
+      title: 'Weather',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={3}>Weather Forecast</Title>
+        </Content>
+        ),
+      icon: <CloudOutlined />,
+      sidebar: <div><Title>Weather Forecast</Title></div>
+    },
+    { 
+      title: 'Images',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={3}>Touch To Play</Title>
+          <FluidSimulatorContainer values={fluidConfig} hooks={setFluidConfig}/>
+        </Content>
+        ),
+      icon: <FireOutlined />,
+      sidebar: <div><FluidSimulatorsSidebar values={fluidConfig} hooks={setFluidConfig} /></div>
     },
     { 
       title: 'Music',
@@ -84,28 +103,8 @@ function App() {
           <MusicContainer />
         </Content>
         ),
-      icon: <HomeOutlined />,
+      icon: <SoundOutlined />,
       sidebar: <div><Title>Music Sidebar</Title></div>
-    },
-    { 
-      title: 'Images',
-      content: (
-        <Content className="site-layout-background">
-          <Title level={3}>Images Controller</Title>
-        </Content>
-        ),
-      icon: <HomeOutlined />,
-      sidebar: <div><Title>Images Sidebar</Title></div>
-    },
-    {
-      title: 'Weather',
-      content: (
-        <Content className="site-layout-background">
-          <Title level={3}>Weather Forecast</Title>
-        </Content>
-        ),
-      icon: <HomeOutlined />,
-      sidebar: <div><Title>Weather Forecast</Title></div>
     },
   ]
 

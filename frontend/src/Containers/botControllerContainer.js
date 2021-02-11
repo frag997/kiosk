@@ -7,7 +7,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 export function BotFormComponent(props) {
-    const { prompt, setPrompt, formEmit } = props;
+    const { prompt, formEmit } = props;
     
     return (
         <div>
@@ -23,7 +23,10 @@ export function BotFormComponent(props) {
                 <TextArea
                     id="textarea"
                     value={prompt}
-                    onChange={e => setPrompt(e.target.value)}
+                    onChange={e => props.hooks({
+                        ...props.values,
+                        prompt: e.target.value
+                    })}
                     placeholder="Type your message"
                     autoSize={{ minRows: 18 }}
                 />
@@ -47,23 +50,21 @@ export function BotCustomSidebar(props) {
     presence_penalty,
     stop_sequences
   } = props.values;
-
-  const {
-    setEngine,
-    setMax_tokens,
-    setTemperature,
-    setTop_p,
-    setFrequency_penalty,
-    setPresence_penalty,
-    setStop_sequences,
-  } = props.hooks;
-
+  
+  const setConfig = props.hooks;
+  
   return (
         <div style={{padding: '10px'}}>
         <br/>
         <Title level={1}>Controls</Title>
         <Title level={5}>Engine:</Title>
-        <Select defaultValue={engine || "davinci"} style={{ width: 150 }} onChange={e => setEngine(e)}>
+        <Select 
+        defaultValue={engine || "davinci"} 
+        style={{ width: 150 }} 
+        onChange={e => setConfig({
+            ...props.values,
+            engine: e
+        })}>
             <Option value="davinci">davinci</Option>
             <Option value="curie">curie</Option>
             <Option value="babbage">babbage</Option>
@@ -80,9 +81,10 @@ export function BotCustomSidebar(props) {
                 min={50}
                 max={400}
                 value={max_tokens}
-                onChange={(event) => {
-                    setMax_tokens(event);
-                }} 
+                onChange={e => setConfig({
+                    ...props.values,
+                    max_tokens: e
+                })} 
             />
         </div>
         <div>
@@ -95,9 +97,10 @@ export function BotCustomSidebar(props) {
                 min={0}
                 max={1}
                 value={temperature}
-                onChange={(event) => {
-                setTemperature(event);
-                }} 
+                onChange={e => setConfig({
+                    ...props.values,
+                    temperature: e
+                })}
             />
         </div>
 
@@ -111,9 +114,10 @@ export function BotCustomSidebar(props) {
                 min={0}
                 max={1}
                 value={top_p}
-                onChange={(event) => {
-                setTop_p(event);
-                }} 
+                onChange={e => setConfig({
+                    ...props.values,
+                    top_p: e
+                })}
             />
         </div>
 
@@ -127,9 +131,10 @@ export function BotCustomSidebar(props) {
                 min={0}
                 max={1}
                 value={frequency_penalty}
-                onChange={(event) => {
-                setFrequency_penalty(event);
-                }} 
+                onChange={e => setConfig({
+                    ...props.values,
+                    frequency_penalty: e
+                })}
             />
         </div>
         <div>
@@ -142,9 +147,10 @@ export function BotCustomSidebar(props) {
             min={0}
             max={1}
             value={presence_penalty}
-            onChange={(event) => {
-            setPresence_penalty(event);
-            }} 
+            onChange={e => setConfig({
+                    ...props.values,
+                    presence_penalty: e
+                })}
             valueLabelDisplay="off"
         />
         </div>
@@ -155,9 +161,10 @@ export function BotCustomSidebar(props) {
         <Paragraph>Type the word, press Enter</Paragraph>
         <Select
             value={stop_sequences}
-            onChange={event => {
-                setStop_sequences(event)
-            }} 
+            onChange={e => setConfig({
+                    ...props.values,
+                    stop_sequences: e
+                })}
             placeholder="Stop Words"
             mode="tags"
             tokenSeparators={[',']} 
