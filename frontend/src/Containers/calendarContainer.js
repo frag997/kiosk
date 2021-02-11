@@ -7,14 +7,14 @@ import googleAPI from  "../utils/calendar/googleAPI"
 const localizer = BigCalendar.momentLocalizer(moment)
 
 const calendar_configuration = {
-    api_key: 'AIzaSyDLXd3SqI-pVmPdcfOE9I1_vCqQfXwP-4o',
+    api_key: process.env.REACT_APP_GOOGLE_API_KEY,
     calendars: [
       {
         name: 'Mars College', // whatever you want to name it
-        url: '01dbbn57set8ltg4pbl95f4d80@group.calendar.google.com' // your calendar URL
+        url: process.env.REACT_APP_URL_MARS_CALENDAR // your calendar URL
       }
-    ],
-    dailyRecurrence: 600,
+    ], 
+    dailyRecurrence: 600, 
     weeklyRecurrence: 100,
     monthlyRecurrence: 100
 }

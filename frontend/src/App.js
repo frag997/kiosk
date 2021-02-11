@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import io from 'socket.io-client';
 import { Layout, Menu, Typography } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 
 import { BotCustomSidebar, BotFormComponent } from './Containers/botControllerContainer';
 import CalendarContainer from './Containers/calendarContainer';
 import MusicContainer from './Containers/musicContainer';
+import { socket } from './API'
 
 import './App.css';
 import LogoImage from './images/logo.png'
@@ -24,22 +24,10 @@ function App() {
   const [stop_sequences, setStop_sequences] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
 
-
-  const socket = io('http://localhost:5000', {
-    transports: ['websocket']
-  });
-  socket.on('connect', function() {
-      socket.emit('connected', {data: 'I\'m connected!'});
-  });
-  socket.on('completion', async function(msg, cb) {
-
-      const newPrompt = prompt + ' ' + msg.data
-      setPrompt(newPrompt)
-
-      if (cb) {
-          cb();
-      }
-  });
+  socket.on('completion', async function (msg, cb) {
+    const newPrompt = prompt + ' ' + msg.data
+    setPrompt(newPrompt)
+  });  
 
   const values = {
     engine: engine,
@@ -86,7 +74,7 @@ function App() {
         </Content>
         ),
       icon: <HomeOutlined />,
-      sidebar: <div><Title>Calendar Sidebar</Title></div>
+      sidebar: <div></div>
     },
     { 
       title: 'Music',
@@ -120,6 +108,7 @@ function App() {
       sidebar: <div><Title>Weather Forecast</Title></div>
     },
   ]
+
   return (
     <Layout>
     <Header className="header">

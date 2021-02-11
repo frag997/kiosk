@@ -4,7 +4,6 @@ import './App.css';
 import App from './App';
 import "antd/dist/antd.css";
 
-require('dotenv').config()
 
 ReactDOM.render(
   <App />,

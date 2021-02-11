@@ -9,7 +9,6 @@
     "antd": "^4.9.4",
     "array.prototype.flat": "^1.2.4",
     "bluebird": "^3.7.2",
-    "dotenv": "^8.2.0",
     "moment": "^2.29.1",
     "parcel": "^1.12.4",
     "react": "^17.0.1",
