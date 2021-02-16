@@ -55,8 +55,8 @@ export function BotCustomSidebar(props) {
   
   return (
         <div style={{padding: '10px'}}>
-        <br/>
-        <Title level={1}>Controls</Title>
+        <Title level={3}>Controls</Title>
+        <hr/>
         <Title level={5}>Engine:</Title>
         <Select 
         defaultValue={engine || "davinci"} 

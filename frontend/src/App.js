@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Typography } from 'antd';
-import { RobotOutlined, CalendarOutlined, CloudOutlined, SoundOutlined, FireOutlined, HomeOutlined } from '@ant-design/icons';
+import { RobotOutlined, CalendarOutlined, CloudOutlined, SoundOutlined, FireOutlined } from '@ant-design/icons';
 
 import { BotCustomSidebar, BotFormComponent } from './Containers/botControllerContainer';
-import CalendarContainer from './Containers/calendarContainer';
-import MusicContainer from './Containers/musicContainer';
+import { CalendarContainer, CalendarToolbar } from './Containers/calendarContainer';
 import { FluidSimulatorContainer, FluidSimulatorsSidebar }from './Containers/fluidSimulatorContainer'
+import WeatherContainer from './Containers/weatherContainer';
+// import MusicContainer from './Containers/musicContainer';
 
+import ChordChart from './Components/musicTab/chord_chart/ChordChart'
 import { socket } from './API'
 
 import './App.css';
@@ -26,7 +28,7 @@ function App() {
     frequency_penalty: 0.9,
     presence_penalty: 0.9,
     stop_sequences: [],
-  })
+  });
 
   const [fluidConfig, setFluidConfig] = useState({
     textureDownsample: 1,
@@ -72,13 +74,14 @@ function App() {
         </Content>
         ),
       icon: <CalendarOutlined />,
-      sidebar: <div></div>
+      sidebar: <div><CalendarToolbar/></div>
     },
     {
       title: 'Weather',
       content: (
         <Content className="site-layout-background">
           <Title level={3}>Weather Forecast</Title>
+          <WeatherContainer/>
         </Content>
         ),
       icon: <CloudOutlined />,
@@ -88,7 +91,7 @@ function App() {
       title: 'Images',
       content: (
         <Content className="site-layout-background">
-          <Title level={3}>Touch To Play</Title>
+          <Title level={3}>Click To Play</Title>
           <FluidSimulatorContainer values={fluidConfig} hooks={setFluidConfig}/>
         </Content>
         ),
@@ -100,11 +103,11 @@ function App() {
       content: (
         <Content className="site-layout-background">
           <Title level={3}>Music Controller</Title>
-          <MusicContainer />
+          {/* <MusicContainer /> */}
         </Content>
         ),
       icon: <SoundOutlined />,
-      sidebar: <div><Title>Music Sidebar</Title></div>
+      sidebar: <div><ChordChart /></div>
     },
   ]
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import FluidAnimation from 'react-fluid-animation'
 
-import { Select, Slider, Button, Typography } from 'antd';
+import { Select, Slider, Typography } from 'antd';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 const { Option } = Select;
 
 
@@ -33,6 +33,7 @@ export function FluidSimulatorsSidebar(props) {
     return (
           <div style={{padding: '10px'}}>
           <Title level={3}>Controls</Title>
+          <hr/>
           {/* <Button 
             type="primary" 
             onClick={onClickRandomSplats}>Random Beams</Button> */}
