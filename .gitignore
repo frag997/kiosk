@@ -1,4 +1,0 @@
-.env
-backend/__pycache__/
-venv/
-frontend/.eslintcache
