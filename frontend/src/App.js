@@ -3,12 +3,10 @@ import { Layout, Menu, Typography } from 'antd';
 import { RobotOutlined, CalendarOutlined, CloudOutlined, SoundOutlined, FireOutlined } from '@ant-design/icons';
 
 import { BotCustomSidebar, BotFormComponent } from './Containers/botControllerContainer';
-import { CalendarContainer, CalendarToolbar } from './Containers/calendarContainer';
+import { CalendarContainer } from './Containers/calendarContainer';
 import { FluidSimulatorContainer, FluidSimulatorsSidebar }from './Containers/fluidSimulatorContainer'
 import WeatherContainer from './Containers/weatherContainer';
-// import MusicContainer from './Containers/musicContainer';
 
-import ChordChart from './Components/musicTab/chord_chart/ChordChart'
 import { socket } from './API'
 
 import './App.css';
@@ -52,19 +50,19 @@ function App() {
   });
   
   const tabs = [
-    { 
-      title: 'Bots',
-      content: (
-        <Content className="site-layout-background">
-          <Title level={1}>Bot Controller</Title>
-          <BotFormComponent 
-            prompt={botConfig.prompt} 
-            formEmit={event => socket.emit('completion_request', botConfig)} />
-        </Content>
-        ),
-      icon: <RobotOutlined />,
-      sidebar:<BotCustomSidebar values={botConfig}  hooks={setBotConfig}/>
-    },
+    // { 
+    //   title: 'Bots',
+    //   content: (
+    //     <Content className="site-layout-background">
+    //       <Title level={1}>Bot Controller</Title>
+    //       <BotFormComponent 
+    //         prompt={botConfig.prompt} 
+    //         formEmit={event => socket.emit('completion_request', botConfig)} />
+    //     </Content>
+    //     ),
+    //   icon: <RobotOutlined />,
+    //   sidebar:<BotCustomSidebar values={botConfig}  hooks={setBotConfig}/>
+    // },
     {
       title: 'Calendar',
       content: (
@@ -74,19 +72,19 @@ function App() {
         </Content>
         ),
       icon: <CalendarOutlined />,
-      sidebar: <div><CalendarToolbar/></div>
+      sidebar: <div>sidebar</div>
     },
-    {
-      title: 'Weather',
-      content: (
-        <Content className="site-layout-background">
-          <Title level={3}>Weather Forecast</Title>
-          <WeatherContainer/>
-        </Content>
-        ),
-      icon: <CloudOutlined />,
-      sidebar: <div><Title>Weather Forecast</Title></div>
-    },
+    // {
+    //   title: 'Weather',
+    //   content: (
+    //     <Content className="site-layout-background">
+    //       <Title level={3}>Weather Forecast</Title>
+    //       <WeatherContainer/>
+    //     </Content>
+    //     ),
+    //   icon: <CloudOutlined />,
+    //   sidebar: <div><Title>Weather Forecast</Title></div>
+    // },
     { 
       title: 'Images',
       content: (
@@ -97,18 +95,17 @@ function App() {
         ),
       icon: <FireOutlined />,
       sidebar: <div><FluidSimulatorsSidebar values={fluidConfig} hooks={setFluidConfig} /></div>
-    },
-    { 
-      title: 'Music',
-      content: (
-        <Content className="site-layout-background">
-          <Title level={3}>Music Controller</Title>
-          {/* <MusicContainer /> */}
-        </Content>
-        ),
-      icon: <SoundOutlined />,
-      sidebar: <div><ChordChart /></div>
-    },
+    }
+    // { 
+    //   title: 'Music',
+    //   content: (
+    //     <Content className="site-layout-background">
+    //       <Title level={3}>Music Controller</Title>
+    //     </Content>
+    //     ),
+    //   icon: <SoundOutlined />,
+    //   sidebar: <div>hey</div>
+    // },
   ]
 
   return (
@@ -137,6 +134,7 @@ function App() {
       </Menu>
     </Header>
     <Layout>
+      {tabs[activeTab].title === 'Images' ? 
       <Sider width={200} className="site-layout-background">
         <Menu
           mode="inline"
@@ -146,7 +144,7 @@ function App() {
         >
           {tabs[activeTab].sidebar}
         </Menu>
-      </Sider>
+      </Sider> : null}
       <Layout style={{ padding: '0 24px 24px' }}>
         {tabs[activeTab].content}
       </Layout>

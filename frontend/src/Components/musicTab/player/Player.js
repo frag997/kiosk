@@ -1,7 +1,7 @@
 /* eslint-disable no-func-assign */
 import React from "react"
 import WebAudioFontPlayer from 'webaudiofont'
-import MIDIFile from '../../../utils/music/MIDIFile'
+// import MIDIFile from '../../../utils/music/MIDIFile'
 import "./Player.css"
 
 import Mixer from "./Mixer";
@@ -22,11 +22,11 @@ export function loadMidi(buff){
         song: s
     })
 
-    let midiFile = new MIDIFile(buff);
-    s.lyrics = midiFile.getLyrics();
-    let song = midiFile.parseSong();
-    this.startLoad(song);
-    this.addDownloadFile(buff);
+    // let midiFile = new MIDIFile(buff);
+    // s.lyrics = midiFile.getLyrics();
+    // let song = midiFile.parseSong();
+    // this.startLoad(song);
+    // this.addDownloadFile(buff);
 }
 
 function buildControls(song){
