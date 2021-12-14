@@ -9,8 +9,6 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
-// import RightArrowIcon from '@material-ui/icons/ChevronRight';
-// import LeftArrowIcon from '@material-ui/icons/ChevronLeft';
 
 import googleAPI from  "../utils/calendar/googleAPI"
 import { Button } from 'antd';
@@ -21,8 +19,8 @@ const calendar_configuration = {
     api_key: process.env.REACT_APP_GOOGLE_API_KEY,
     calendars: [
       {
-        name: 'Mars College', // whatever you want to name it
-        url: process.env.REACT_APP_URL_MARS_CALENDAR // your calendar URL
+        name: 'Mars College',
+        url: process.env.REACT_APP_URL_MARS_CALENDAR
       }
     ], 
     dailyRecurrence: 600, 
@@ -52,7 +50,7 @@ export class CalendarContainer extends Component {
       .then(events => {
         this.setState({ events })
       })
-      .catch(err => { throw new Error(err) })
+      .catch(err => { console.log(err)})
   }
 
   render = () =>
