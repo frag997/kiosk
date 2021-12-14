@@ -1,69 +1,70 @@
 import React, { useState } from 'react';
-import io from 'socket.io-client';
 import { Layout, Menu, Typography } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
+import { RobotOutlined, CalendarOutlined, CloudOutlined, SoundOutlined, FireOutlined } from '@ant-design/icons';
 
-import CustomSidebar from './Containers/sideBarContainer';
-import FormContainer from './Containers/formContainer';
-import CalendarContainer from './Containers/calendarContainer';
-import MusicContainer from './Containers/musicContainer';
+import { BotCustomSidebar, BotFormComponent } from './Containers/botControllerContainer';
+import { CalendarContainer, CalendarToolbar } from './Containers/calendarContainer';
+import { FluidSimulatorContainer, FluidSimulatorsSidebar }from './Containers/fluidSimulatorContainer'
+import WeatherContainer from './Containers/weatherContainer';
+// import MusicContainer from './Containers/musicContainer';
+
+import ChordChart from './Components/musicTab/chord_chart/ChordChart'
+import { socket } from './API'
 
 import './App.css';
 import LogoImage from './images/logo.png'
 
 const { Header, Content, Footer, Sider } = Layout;
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 function App() {
-  const [engine, setEngine] = useState('');
-  const [prompt, setPrompt] = useState('');
-  const [max_tokens, setMax_tokens] = useState(125);
-  const [temperature, setTemperature] = useState(0.9);
-  const [top_p, setTop_p] = useState(0.9);
-  const [frequency_penalty, setFrequency_penalty] = useState(0.9);
-  const [presence_penalty, setPresence_penalty] = useState(0.9);
-  const [stop_sequences, setStop_sequences] = useState([]);
+ 
+  const [botConfig, setBotConfig] = useState({
+    engine: 'davinci',
+    prompt: '',
+    max_tokens: 125,
+    temperature: 0.9,
+    top_p: 0.9,
+    frequency_penalty: 0.9,
+    presence_penalty: 0.9,
+    stop_sequences: [],
+  });
+
+  const [fluidConfig, setFluidConfig] = useState({
+    textureDownsample: 1,
+    densityDissipation: 0.98,
+    velocityDissipation: 0.99,
+    pressureDissipation: 0.8,
+    pressureIterations: 25,
+    curl: 30,
+    splatRadius: 0.005,
+    animationRef: ''
+  });
+
   const [activeTab, setActiveTab] = useState(0);
-
-
-  const socket = io('http://localhost:5000', {
-    transports: ['websocket']
+  
+  socket.on('completion', async function (msg, cb) {
+    const newPrompt = prompt + ' ' + msg.data
+    setBotConfig({
+      ...botConfig,
+      prompt: newPrompt
+    })
   });
-  socket.on('connect', function() {
-      socket.emit('connected', {data: 'I\'m connected!'});
-  });
-  socket.on('completion', async function(msg, cb) {
-
-      const newPrompt = prompt + ' ' + msg.data
-      setPrompt(newPrompt)
-
-      if (cb) {
-          cb();
-      }
-  });
-
-  const values = {
-    engine: engine,
-    prompt: prompt,
-    max_tokens: max_tokens,
-    temperature: temperature,
-    top_p: top_p,
-    frequency_penalty: frequency_penalty,
-    presence_penalty: presence_penalty,
-    stop_sequences: stop_sequences
-  }
-  const hooks = {
-    setEngine,
-    setPrompt,
-    setMax_tokens,
-    setTemperature,
-    setTop_p,
-    setFrequency_penalty,
-    setPresence_penalty,
-    setStop_sequences
-  }
-
+  
   const tabs = [
+    { 
+      title: 'Bots',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={1}>Bot Controller</Title>
+          <BotFormComponent 
+            prompt={botConfig.prompt} 
+            formEmit={event => socket.emit('completion_request', botConfig)} />
+        </Content>
+        ),
+      icon: <RobotOutlined />,
+      sidebar:<BotCustomSidebar values={botConfig}  hooks={setBotConfig}/>
+    },
     {
       title: 'Calendar',
       content: (
@@ -72,59 +73,44 @@ function App() {
           <CalendarContainer/>
         </Content>
         ),
-      icon: <HomeOutlined />,
-      sidebar: <div><Title>Calendar Sidebar</Title></div>
-    },
-    { 
-      title: 'Bots',
-      content: (
-        <Content className="site-layout-background">
-          <Title level={3}>Type your Message here</Title>
-          <FormContainer 
-            prompt={prompt} 
-            setPrompt={setPrompt} 
-            formEmit={event => socket.emit('completion_request', values)} />
-          <div style={{marginTop: '20px'}}>
-            <Title>Bot Controller:</Title>
-            <Paragraph>{prompt}</Paragraph>
-          </div>
-        </Content>
-        ),
-      icon: <HomeOutlined />,
-      sidebar:<CustomSidebar hooks={hooks} values={values} />
-    },
-    { 
-      title: 'Music',
-      content: (
-        <Content className="site-layout-background">
-          <Title level={3}>Music Controller</Title>
-          <MusicContainer />
-        </Content>
-        ),
-      icon: <HomeOutlined />,
-      sidebar: <div><Title>Music Sidebar</Title></div>
-    },
-    { 
-      title: 'Images',
-      content: (
-        <Content className="site-layout-background">
-          <Title level={3}>Images Controller</Title>
-        </Content>
-        ),
-      icon: <HomeOutlined />,
-      sidebar: <div><Title>Images Sidebar</Title></div>
+      icon: <CalendarOutlined />,
+      sidebar: <div><CalendarToolbar/></div>
     },
     {
       title: 'Weather',
       content: (
         <Content className="site-layout-background">
           <Title level={3}>Weather Forecast</Title>
+          <WeatherContainer/>
         </Content>
         ),
-      icon: <HomeOutlined />,
+      icon: <CloudOutlined />,
       sidebar: <div><Title>Weather Forecast</Title></div>
     },
+    { 
+      title: 'Images',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={3}>Click To Play</Title>
+          <FluidSimulatorContainer values={fluidConfig} hooks={setFluidConfig}/>
+        </Content>
+        ),
+      icon: <FireOutlined />,
+      sidebar: <div><FluidSimulatorsSidebar values={fluidConfig} hooks={setFluidConfig} /></div>
+    },
+    { 
+      title: 'Music',
+      content: (
+        <Content className="site-layout-background">
+          <Title level={3}>Music Controller</Title>
+          {/* <MusicContainer /> */}
+        </Content>
+        ),
+      icon: <SoundOutlined />,
+      sidebar: <div><ChordChart /></div>
+    },
   ]
+
   return (
     <Layout>
     <Header className="header">

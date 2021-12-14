@@ -6,7 +6,7 @@ import "./Player.css"
 import { Grid, Slider, Dialog, DialogContent, DialogTitle, MenuItem, Select } from '@material-ui/core';
 
 // Icons
-import { RiEqualizerFill, RiVolumeUpFill, RiVolumeMuteFill } from 'react-icons/ri';
+import { RiEqualizerFill, RiVolumeUpFill } from 'react-icons/ri';
 
 
 function TrackVolume(props){
@@ -31,11 +31,11 @@ function TrackVolume(props){
 function Chooser(props){
     let player = props.player ? props.player : null;
     let audioContext = props.audioContext ? props.audioContext : null;    
-    let song = props.song ? props.song : null;
+    // let song = props.song ? props.song : null;
     let type = props.type ? props.type : "";  
     let keys = props.keys ? props.keys : [];
     let info = props.info ? props.info : null;
-    const [opt, setOpt] = React.useState(props.opt);
+    const [opt] = React.useState(props.opt);
     const [id, setId] = React.useState(opt.id);
     let opts = [];
 
@@ -52,7 +52,7 @@ function Chooser(props){
     };
 
     Object.keys(player.loader[keys]()).map(function(key, index) {
-        opts.push(
+        return opts.push(
             <MenuItem value={key} key={player.loader[info](key).title+"_"+id+key}>
                 {player.loader[info](key).title}
             </MenuItem>)
@@ -83,9 +83,11 @@ class Mixer extends React.Component {
     }
 
     componentDidMount() {
-        this.state.song = this.props.song;
-        this.state.player = this.props.player;
-        this.state.audioContext = this.props.audioContext;
+        this.setState({
+            song: this.props.song,
+            player: this.props.player,
+            audioContext: this.props.audioContext
+        });
         this.loadInstruments();
     }
 
@@ -133,8 +135,8 @@ class Mixer extends React.Component {
             }
 
             // Drums
-            for (var i = 0; i < song.beats.length; i++) {
-                var v = 100 * song.beats[i].volume;
+            for (let i = 0; i < song.beats.length; i++) {
+                let v = 100 * song.beats[i].volume;
                 drums.tracks.push(
                     <Chooser 
                         player={player}

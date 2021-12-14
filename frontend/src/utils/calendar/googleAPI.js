@@ -1,5 +1,4 @@
 import * as Promise from 'bluebird'
-import moment from 'moment'
 
 import {
   handleDaily,
@@ -17,6 +16,7 @@ import {
   removeRecurrenceProperty
 } from './functions'
 
+// eslint-disable-next-line no-extend-native
 Object.defineProperty(Array.prototype, 'flat', {
     value: function(depth = 1) {
       return this.reduce(function (flat, toFlatten) {

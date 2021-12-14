@@ -5,15 +5,9 @@ from flask_cors import CORS, cross_origin
 from flask import Flask, flash, request, redirect, url_for, send_file, jsonify, Blueprint
 
 from mma import MMAdir
-from mma.MMA import gbl
-from mma.MMA import auto
-from mma.MMA import midi
-from mma.MMA import tempo
-from mma.MMA import parse
-from mma.MMA import paths
-from mma.MMA import grooves
-from mma.MMA import userGroove
-
+from mma.MMA import gbl, auto, midi, tempo, parse, paths, grooves, userGroove
+from mma.MMA.paths import libDirs
+from mma.MMA.auto import loadDB
 
 ALLOWED_EXTENSIONS = {'mma'}
 urls_blueprint = Blueprint('urls', __name__,)
@@ -127,10 +121,7 @@ def upload_groove():
 @urls_blueprint.route('/song', methods=['POST'])
 def song():
     if request.is_json:
-        data = request.get_json()
-        print("here")
-        print(data)
-        
+        data = request.get_json()      
         with tempfile.NamedTemporaryFile(mode="w", suffix=".mma", delete=False) as outfile:
             outfile.write("// Name "+ data["name"] + "\n")
             outfile.write("// Author "+ data["author"] + "\n")
@@ -150,11 +141,9 @@ def song():
                     chord_n += 1
                 outfile.write(chord_ids+"]")
         outfile.close()
-        print(outfile)        
+        
         if outfile:
-            midi_filename = generate_midi(outfile.name)
-            print(midi_filename)
-            
+            midi_filename = generate_midi(outfile.name)            
             if midi_filename:
                 return send_file(midi_filename, as_attachment=True)    
             else:
@@ -164,7 +153,6 @@ def song():
 
 
 
-from mma.MMA.auto import loadDB
 
 @urls_blueprint.route('/list_grooves', methods=['GET'])
 def list_grooves():
@@ -172,10 +160,7 @@ def list_grooves():
     gbl.__init__()
     # Set paths for the libs
     paths.init()
-
-    # Needed import for global variable libDirs after paths.init() method ran
-    from mma.MMA.paths import libDirs
-
+    
     grooves = {}
     for lib in libDirs:
         g = loadDB(lib)

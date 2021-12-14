@@ -1,11 +1,46 @@
 import React from 'react';
-
-import { Select, Slider, Typography } from 'antd';
+import { Select, Slider, Input, Typography } from 'antd';
 
 const { Title, Paragraph } = Typography;
 const { Option } = Select;
 
-function CustomSidebar(props) {
+const { TextArea } = Input;
+
+export function BotFormComponent(props) {
+    const { prompt, formEmit } = props;
+    
+    return (
+        <div>
+            <Title level={4}>Type your Message here:</Title>
+            <form 
+                onSubmit={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                formEmit(event)
+            }} 
+                id="noter-text-area" 
+                method="GET" action='#'>
+                <TextArea
+                    id="textarea"
+                    value={prompt}
+                    onChange={e => props.hooks({
+                        ...props.values,
+                        prompt: e.target.value
+                    })}
+                    placeholder="Type your message"
+                    autoSize={{ minRows: 18 }}
+                />
+                <input type="submit" value="Save" />
+            </form>
+            <div style={{marginTop: '20px'}}>
+                <Title>Bot Response:</Title>
+                <Paragraph>{prompt}</Paragraph>
+            </div>
+        </div>
+    )
+}
+
+export function BotCustomSidebar(props) {
   const {
     engine,
     max_tokens,
@@ -15,23 +50,21 @@ function CustomSidebar(props) {
     presence_penalty,
     stop_sequences
   } = props.values;
-
-  const {
-    setEngine,
-    setMax_tokens,
-    setTemperature,
-    setTop_p,
-    setFrequency_penalty,
-    setPresence_penalty,
-    setStop_sequences,
-  } = props.hooks;
-
+  
+  const setConfig = props.hooks;
+  
   return (
         <div style={{padding: '10px'}}>
-        <br/>
-        <Title level={1}>Controls</Title>
+        <Title level={3}>Controls</Title>
+        <hr/>
         <Title level={5}>Engine:</Title>
-        <Select defaultValue={engine} style={{ width: 150 }} onChange={e => setEngine(e)}>
+        <Select 
+        defaultValue={engine || "davinci"} 
+        style={{ width: 150 }} 
+        onChange={e => setConfig({
+            ...props.values,
+            engine: e
+        })}>
             <Option value="davinci">davinci</Option>
             <Option value="curie">curie</Option>
             <Option value="babbage">babbage</Option>
@@ -48,9 +81,10 @@ function CustomSidebar(props) {
                 min={50}
                 max={400}
                 value={max_tokens}
-                onChange={(event) => {
-                    setMax_tokens(event);
-                }} 
+                onChange={e => setConfig({
+                    ...props.values,
+                    max_tokens: e
+                })} 
             />
         </div>
         <div>
@@ -63,9 +97,10 @@ function CustomSidebar(props) {
                 min={0}
                 max={1}
                 value={temperature}
-                onChange={(event) => {
-                setTemperature(event);
-                }} 
+                onChange={e => setConfig({
+                    ...props.values,
+                    temperature: e
+                })}
             />
         </div>
 
@@ -79,9 +114,10 @@ function CustomSidebar(props) {
                 min={0}
                 max={1}
                 value={top_p}
-                onChange={(event) => {
-                setTop_p(event);
-                }} 
+                onChange={e => setConfig({
+                    ...props.values,
+                    top_p: e
+                })}
             />
         </div>
 
@@ -95,9 +131,10 @@ function CustomSidebar(props) {
                 min={0}
                 max={1}
                 value={frequency_penalty}
-                onChange={(event) => {
-                setFrequency_penalty(event);
-                }} 
+                onChange={e => setConfig({
+                    ...props.values,
+                    frequency_penalty: e
+                })}
             />
         </div>
         <div>
@@ -110,9 +147,10 @@ function CustomSidebar(props) {
             min={0}
             max={1}
             value={presence_penalty}
-            onChange={(event) => {
-            setPresence_penalty(event);
-            }} 
+            onChange={e => setConfig({
+                    ...props.values,
+                    presence_penalty: e
+                })}
             valueLabelDisplay="off"
         />
         </div>
@@ -123,9 +161,10 @@ function CustomSidebar(props) {
         <Paragraph>Type the word, press Enter</Paragraph>
         <Select
             value={stop_sequences}
-            onChange={event => {
-                setStop_sequences(event)
-            }} 
+            onChange={e => setConfig({
+                    ...props.values,
+                    stop_sequences: e
+                })}
             placeholder="Stop Words"
             mode="tags"
             tokenSeparators={[',']} 
@@ -133,10 +172,7 @@ function CustomSidebar(props) {
             dropdownStyle={{ display: 'none' }}
             style={{ width: '100%'}}>
         </Select>
-        {/* <TextArea rows={4} /> */}
         </div>
     </div>
   );
 }
-
-export default CustomSidebar;

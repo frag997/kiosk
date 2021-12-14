@@ -1,3 +1,4 @@
+/* eslint-disable no-func-assign */
 import React from "react";
 import { Snackbar, Backdrop, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
